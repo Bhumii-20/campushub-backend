@@ -3,6 +3,10 @@ const Note = require('../models/Note');
 // Create Note
 const createNote = async (req, res) => {
   try {
+    console.log('req.body:', req.body);
+    console.log('req.file:', req.file);
+    console.log('req.user:', req.user);
+
     const title = req.body?.title;
     const subject = req.body?.subject;
     const description = req.body?.description;
@@ -27,6 +31,7 @@ const createNote = async (req, res) => {
       note,
     });
   } catch (error) {
+    console.log('ERROR:', error.message);
     res.status(500).json({
       message: error.message,
     });
