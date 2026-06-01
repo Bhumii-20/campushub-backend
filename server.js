@@ -12,7 +12,9 @@ const lostFoundRoutes = require('./routes/lostFoundRoutes');
 const app = express();
 
 app.use(cors({
-  origin: 'https://campushub-frontend-ten.vercel.app',
+  origin: function(origin, callback) {
+    callback(null, true);
+  },
   credentials: true,
 }));
 
