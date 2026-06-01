@@ -3,9 +3,9 @@ const Note = require('../models/Note');
 // Create Note
 const createNote = async (req, res) => {
   try {
-    console.log('req.body:', req.body);
-    console.log('req.file:', req.file);
-    console.log('req.user:', req.user);
+    console.log('req.body:', JSON.stringify(req.body));
+    console.log('req.file:', JSON.stringify(req.file));
+    console.log('req.user:', JSON.stringify(req.user));
 
     const title = req.body?.title;
     const subject = req.body?.subject;
@@ -31,7 +31,8 @@ const createNote = async (req, res) => {
       note,
     });
   } catch (error) {
-    console.log('ERROR:', error.message);
+    console.log('ERROR MESSAGE:', error.message);
+    console.log('ERROR STACK:', error.stack);
     res.status(500).json({
       message: error.message,
     });
@@ -45,15 +46,9 @@ const getNotes = async (req, res) => {
       'uploadedBy',
       'name email'
     );
-
-    res.json({
-      success: true,
-      notes,
-    });
+    res.json({ success: true, notes });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -61,28 +56,14 @@ const getNotes = async (req, res) => {
 const deleteNote = async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
-
     if (!note) {
-      return res.status(404).json({
-        message: 'Note not found',
-      });
+      return res.status(404).json({ message: 'Note not found' });
     }
-
     await note.deleteOne();
-
-    res.json({
-      success: true,
-      message: 'Note Deleted',
-    });
+    res.json({ success: true, message: 'Note Deleted' });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = {
-  createNote,
-  getNotes,
-  deleteNote,
-};
+module.exports = { createNote, getNotes, deleteNote };
