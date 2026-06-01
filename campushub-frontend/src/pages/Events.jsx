@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function Events() {
   const [events, setEvents] = useState([]);
@@ -12,7 +13,7 @@ function Events() {
   const token = localStorage.getItem('token');
 
   const fetchEvents = async () => {
-    const res = await axios.get('http://localhost:5000/api/events');
+    const res = await axios.get(API_URL + '/api/events');
     setEvents(res.data.events);
   };
 
@@ -27,7 +28,7 @@ function Events() {
     }
     try {
       setError('');
-      await axios.post('http://localhost:5000/api/events',
+      await axios.post(API_URL + '/api/events',
         { title, description, date, venue },
         { headers: { Authorization: 'Bearer ' + token } }
       );
@@ -44,7 +45,7 @@ function Events() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this event?')) return;
-    await axios.delete('http://localhost:5000/api/events/' + id, {
+    await axios.delete(API_URL + '/api/events/' + id, {
       headers: { Authorization: 'Bearer ' + token },
     });
     fetchEvents();
@@ -53,7 +54,6 @@ function Events() {
   return (
     <div style={{ padding: '30px', maxWidth: '900px', margin: '0 auto' }}>
       <h2 style={{ textAlign: 'center', color: '#1a1a2e' }}>📅 Events</h2>
-
       <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
         <h3 style={{ color: '#1a1a2e' }}>Create Event</h3>
         {message && <p style={{ color: 'green', background: '#e8f5e9', padding: '10px', borderRadius: '6px' }}>{message}</p>}
@@ -64,7 +64,6 @@ function Events() {
         <textarea style={styles.textarea} placeholder="Description *" value={description} onChange={e => setDescription(e.target.value)} />
         <button style={styles.btn} onClick={handleCreate}>Create Event</button>
       </div>
-
       <h3 style={{ color: '#1a1a2e' }}>Upcoming Events</h3>
       {events.length === 0 && <p style={{ color: '#888', textAlign: 'center' }}>No events found.</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
@@ -79,9 +78,7 @@ function Events() {
             <p style={{ color: '#555', fontSize: '14px' }}>{event.description}</p>
             <p style={{ color: '#888', fontSize: '13px' }}>📍 {event.venue}</p>
             <p style={{ color: '#888', fontSize: '13px' }}>👤 {event.createdBy && event.createdBy.name}</p>
-            <button onClick={() => handleDelete(event._id)} style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer' }}>
-              Delete
-            </button>
+            <button onClick={() => handleDelete(event._id)} style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer' }}>Delete</button>
           </div>
         ))}
       </div>
@@ -96,3 +93,4 @@ const styles = {
 };
 
 export default Events;
+  

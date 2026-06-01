@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import API_URL from '../config';
 
 function Notes() {
   const [title, setTitle] = useState('');
@@ -27,8 +28,8 @@ function Notes() {
     try {
       setLoading(true);
       setError('');
-      await axios.post('http://localhost:5000/api/notes', form, {
-        headers: { Authorization: `Bearer ${token}` },
+      await axios.post(API_URL + '/api/notes', form, {
+        headers: { Authorization: 'Bearer ' + token },
       });
       setMessage('✅ Note uploaded successfully!');
       setTitle('');
@@ -82,3 +83,4 @@ const styles = {
 };
 
 export default Notes;
+  

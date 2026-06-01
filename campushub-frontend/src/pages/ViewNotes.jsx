@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function ViewNotes() {
   const [notes, setNotes] = useState([]);
@@ -7,7 +8,7 @@ function ViewNotes() {
   const token = localStorage.getItem('token');
 
   const fetchNotes = async () => {
-    const res = await axios.get('http://localhost:5000/api/notes');
+    const res = await axios.get(API_URL + '/api/notes');
     setNotes(res.data.notes);
   };
 
@@ -17,7 +18,7 @@ function ViewNotes() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure?')) return;
-    await axios.delete('http://localhost:5000/api/notes/' + id, {
+    await axios.delete(API_URL + '/api/notes/' + id, {
       headers: { Authorization: 'Bearer ' + token },
     });
     fetchNotes();
@@ -49,11 +50,11 @@ function ViewNotes() {
             <p style={{ color: '#888', fontSize: '13px' }}>By: {note.uploadedBy && note.uploadedBy.name}</p>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               {note.fileUrl ? (
-                <a href={'http://localhost:5000/' + note.fileUrl} target="_blank" rel="noreferrer" style={{ background: '#4CAF50', color: 'white', padding: '8px 14px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px' }}>
+                <a href={API_URL + '/' + note.fileUrl} target='_blank' rel='noreferrer' style={{ background: '#4CAF50', color: 'white', padding: '8px 14px', borderRadius: '6px', textDecoration: 'none', fontSize: '14px' }}>
                   Download
                 </a>
               ) : (
-                <span style={{ color: '#aaa' }}>No file</span>
+                <span style={{ color: '#aaa', fontSize: '14px' }}>No file</span>
               )}
               <button onClick={() => handleDelete(note._id)} style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer' }}>
                 Delete

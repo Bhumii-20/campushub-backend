@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import API_URL from '../config';
 
 function Register() {
   const [name, setName] = useState('');
@@ -11,7 +12,7 @@ function Register() {
 
   const handleRegister = async () => {
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post(API_URL + '/api/auth/register', {
         name,
         email,
         password,
@@ -38,7 +39,7 @@ function Register() {
 }
 
 const styles = {
-  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '90vh' },
+  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '90vh' },
   box: { background: '#f5f5f5', padding: '30px', borderRadius: '10px', width: '300px', textAlign: 'center' },
   input: { width: '100%', padding: '10px', margin: '8px 0', borderRadius: '5px', border: '1px solid #ccc', boxSizing: 'border-box' },
   btn: { width: '100%', padding: '10px', background: '#1a1a2e', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' },

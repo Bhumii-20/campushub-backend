@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function LostFound() {
   const [posts, setPosts] = useState([]);
@@ -15,7 +16,7 @@ function LostFound() {
   const token = localStorage.getItem('token');
 
   const fetchPosts = async () => {
-    const res = await axios.get('http://localhost:5000/api/lostfound');
+    const res = await axios.get(API_URL + '/api/lostfound');
     setPosts(res.data.posts);
   };
 
@@ -37,8 +38,7 @@ function LostFound() {
       form.append('location', location);
       form.append('contact', contact);
       if (image) form.append('image', image);
-
-      await axios.post('http://localhost:5000/api/lostfound', form, {
+      await axios.post(API_URL + '/api/lostfound', form, {
         headers: { Authorization: 'Bearer ' + token },
       });
       setMessage('Post created successfully!');
@@ -56,7 +56,7 @@ function LostFound() {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this post?')) return;
-    await axios.delete('http://localhost:5000/api/lostfound/' + id, {
+    await axios.delete(API_URL + '/api/lostfound/' + id, {
       headers: { Authorization: 'Bearer ' + token },
     });
     fetchPosts();
@@ -67,7 +67,6 @@ function LostFound() {
   return (
     <div style={{ padding: '30px', maxWidth: '900px', margin: '0 auto' }}>
       <h2 style={{ textAlign: 'center', color: '#1a1a2e' }}>Lost & Found</h2>
-
       <div style={{ background: 'white', padding: '25px', borderRadius: '12px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', marginBottom: '30px' }}>
         <h3 style={{ color: '#1a1a2e' }}>Post an Item</h3>
         {message && <p style={{ color: 'green', background: '#e8f5e9', padding: '10px', borderRadius: '6px' }}>{message}</p>}
@@ -86,33 +85,25 @@ function LostFound() {
         </label>
         <button style={styles.btn} onClick={handleCreate}>Post Item</button>
       </div>
-
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
         <button style={{ ...styles.filterBtn, background: filter === 'all' ? '#1a1a2e' : '#eee', color: filter === 'all' ? 'white' : '#333' }} onClick={() => setFilter('all')}>All</button>
         <button style={{ ...styles.filterBtn, background: filter === 'lost' ? '#e74c3c' : '#eee', color: filter === 'lost' ? 'white' : '#333' }} onClick={() => setFilter('lost')}>Lost</button>
         <button style={{ ...styles.filterBtn, background: filter === 'found' ? '#4CAF50' : '#eee', color: filter === 'found' ? 'white' : '#333' }} onClick={() => setFilter('found')}>Found</button>
       </div>
-
       {filtered.length === 0 && <p style={{ color: '#888', textAlign: 'center' }}>No posts found.</p>}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
         {filtered.map(post => (
           <div key={post._id} style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', border: '1px solid #eee' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
               <h3 style={{ margin: 0, color: '#1a1a2e' }}>{post.title}</h3>
-              <span style={{ background: post.type === 'lost' ? '#e74c3c' : '#4CAF50', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '12px' }}>
-                {post.type.toUpperCase()}
-              </span>
+              <span style={{ background: post.type === 'lost' ? '#e74c3c' : '#4CAF50', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '12px' }}>{post.type.toUpperCase()}</span>
             </div>
-            {post.imageUrl && (
-              <img src={'http://localhost:5000/' + post.imageUrl} alt={post.title} style={{ width: '100%', borderRadius: '8px', marginBottom: '10px', height: '150px', objectFit: 'cover' }} />
-            )}
+            {post.imageUrl && <img src={API_URL + '/' + post.imageUrl} alt={post.title} style={{ width: '100%', borderRadius: '8px', marginBottom: '10px', height: '150px', objectFit: 'cover' }} />}
             <p style={{ color: '#555', fontSize: '14px' }}>{post.description}</p>
             <p style={{ color: '#888', fontSize: '13px' }}>📍 {post.location}</p>
             <p style={{ color: '#888', fontSize: '13px' }}>📞 {post.contact}</p>
             <p style={{ color: '#888', fontSize: '13px' }}>👤 {post.postedBy && post.postedBy.name}</p>
-            <button onClick={() => handleDelete(post._id)} style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer' }}>
-              Delete
-            </button>
+            <button onClick={() => handleDelete(post._id)} style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '8px 14px', borderRadius: '6px', cursor: 'pointer' }}>Delete</button>
           </div>
         ))}
       </div>
@@ -129,3 +120,4 @@ const styles = {
 };
 
 export default LostFound;
+            

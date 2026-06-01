@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import API_URL from '../config';
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -9,24 +10,24 @@ function Profile() {
   const token = localStorage.getItem('token');
 
   const fetchProfile = async () => {
-    const res = await axios.get('http://localhost:5000/api/users/profile', {
+    const res = await axios.get(API_URL + '/api/users/profile', {
       headers: { Authorization: 'Bearer ' + token },
     });
     setUser(res.data.user);
   };
 
   const fetchMyNotes = async () => {
-    const res = await axios.get('http://localhost:5000/api/notes');
+    const res = await axios.get(API_URL + '/api/notes');
     setNotes(res.data.notes.filter(n => n.uploadedBy?._id === user?._id));
   };
 
   const fetchMyEvents = async () => {
-    const res = await axios.get('http://localhost:5000/api/events');
+    const res = await axios.get(API_URL + '/api/events');
     setEvents(res.data.events.filter(e => e.createdBy?._id === user?._id));
   };
 
   const fetchMyPosts = async () => {
-    const res = await axios.get('http://localhost:5000/api/lostfound');
+    const res = await axios.get(API_URL + '/api/lostfound');
     setPosts(res.data.posts.filter(p => p.postedBy?._id === user?._id));
   };
 
@@ -67,7 +68,6 @@ function Profile() {
           </div>
         </div>
       </div>
-
       <h3 style={{ color: '#1a1a2e' }}>My Notes</h3>
       {notes.length === 0 && <p style={{ color: '#888' }}>No notes uploaded yet.</p>}
       <div style={styles.grid}>
@@ -79,7 +79,6 @@ function Profile() {
           </div>
         ))}
       </div>
-
       <h3 style={{ color: '#1a1a2e', marginTop: '30px' }}>My Events</h3>
       {events.length === 0 && <p style={{ color: '#888' }}>No events created yet.</p>}
       <div style={styles.grid}>
@@ -91,7 +90,6 @@ function Profile() {
           </div>
         ))}
       </div>
-
       <h3 style={{ color: '#1a1a2e', marginTop: '30px' }}>My Lost & Found Posts</h3>
       {posts.length === 0 && <p style={{ color: '#888' }}>No posts yet.</p>}
       <div style={styles.grid}>
