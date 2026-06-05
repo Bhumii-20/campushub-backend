@@ -10,10 +10,11 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
+    const isPDF = file.mimetype === 'application/pdf';
     return {
       folder: 'campushub',
-      resource_type: 'raw',
-      public_id: Date.now() + '.pdf',
+      resource_type: isPDF ? 'raw' : 'image',
+      public_id: isPDF ? Date.now() + '.pdf' : undefined,
     };
   },
 });
